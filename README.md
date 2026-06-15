@@ -1,19 +1,35 @@
 # Customer Segmentation and Churn Prediction
 
-## Internship Project
+## Project Overview
 
-This project focuses on:
+This project aims to analyze customer behavior, segment customers into different groups, and predict customer churn using Machine Learning techniques.
 
-1. Customer Segmentation
-2. Customer Churn Prediction
+## Dataset
 
-### Week 1 Progress
-- Project setup completed
-- GitHub repository created
-- Environment setup completed
+Telco Customer Churn Dataset
 
-### Tools
+- Total Records: 7043
+- Total Features: 21
+
+## Week 1 Progress
+
+- Project repository created
+- Dataset collected from Kaggle
+- Initial Exploratory Data Analysis completed
+- Dataset loaded successfully using Pandas
+- Checked dataset dimensions and data types
+
+## Tools Used
+
 - Python
 - Pandas
-- Scikit-Learn
+- Git
 - GitHub
+- VS Code
+
+## Next Steps
+
+- Analyze churn distribution
+- Data cleaning
+- Customer segmentation
+- Churn prediction model development

@@ -24,3 +24,5 @@ print("\n")
 # Statistics
 print("SUMMARY")
 print(df.describe())
+print("\nCHURN DISTRIBUTION")
+print(df["Churn"].value_counts())
