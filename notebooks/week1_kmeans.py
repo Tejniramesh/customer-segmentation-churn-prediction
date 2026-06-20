@@ -1,47 +1,54 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
 
 # Load dataset
 df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
 
-print("Dataset Loaded Successfully!")
-print("Rows and Columns:", df.shape)
-
-# Select features for K-Means
-features = df[['tenure', 'MonthlyCharges', 'TotalCharges']]
-
-print("\nSelected Features:")
-print(features.head())
-
-print("\nData Types:")
-print(features.dtypes)
-# Convert TotalCharges to numeric
+# Clean TotalCharges
 df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
-
-# Remove empty values
 df = df.dropna()
 
-print("\nAfter Cleaning:")
-print(df[['tenure', 'MonthlyCharges', 'TotalCharges']].dtypes)
-from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans
-
-print("Reached KMeans section")
-
-# Select clean features
+# Features for clustering
 features = df[['tenure', 'MonthlyCharges', 'TotalCharges']]
 
-# Scale the data
+# Scale data
 scaler = StandardScaler()
 scaled_features = scaler.fit_transform(features)
 
-print("\nScaling Completed!")
-print("Scaled Data Shape:", scaled_features.shape)
-
-# K-Means Clustering
+# K-Means
 kmeans = KMeans(n_clusters=3, random_state=42)
 df['Segment'] = kmeans.fit_predict(scaled_features)
 
-print("\nSegments Created Successfully!")
+# Segment names
+segment_names = {
+    0: "Premium Customers",
+    1: "New Customers",
+    2: "Regular Customers"
+}
 
-print("\nSegment Distribution:")
-print(df['Segment'].value_counts())
+df["Segment_Name"] = df["Segment"].map(segment_names)
+
+# Segment analysis
+segment_analysis = df.groupby("Segment")[["tenure", "MonthlyCharges", "TotalCharges"]].mean()
+
+print("\nSegment Analysis")
+print(segment_analysis)
+
+# Graph
+plt.figure(figsize=(8,5))
+
+segment_counts = df["Segment_Name"].value_counts()
+
+plt.bar(segment_counts.index, segment_counts.values)
+
+plt.title("Customer Segments")
+plt.xlabel("Segment")
+plt.ylabel("Number of Customers")
+
+plt.tight_layout()
+
+plt.savefig("segment_distribution.png")
+
+print("\nGraph saved as segment_distribution.png")
