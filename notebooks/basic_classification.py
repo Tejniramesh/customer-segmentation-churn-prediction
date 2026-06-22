@@ -4,8 +4,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
-
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
 
 # Load dataset
 df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
@@ -17,8 +17,25 @@ df = df.dropna()
 # Convert Churn
 df['Churn'] = df['Churn'].map({'No': 0, 'Yes': 1})
 
+# ==========================
+# FEATURE ENGINEERING
+# ==========================
+
+df['Partner'] = df['Partner'].map({'No': 0, 'Yes': 1})
+df['Dependents'] = df['Dependents'].map({'No': 0, 'Yes': 1})
+df['PaperlessBilling'] = df['PaperlessBilling'].map({'No': 0, 'Yes': 1})
+
 # Features
-X = df[['tenure', 'MonthlyCharges', 'TotalCharges']]
+X = df[
+    [
+        'tenure',
+        'MonthlyCharges',
+        'TotalCharges',
+        'Partner',
+        'Dependents',
+        'PaperlessBilling'
+    ]
+]
 
 # Target
 y = df['Churn']
@@ -86,8 +103,8 @@ print("BEST MODEL")
 print("===================================")
 print(best_model)
 print("Accuracy:", round(accuracies[best_model] * 100, 2), "%")
-from sklearn.metrics import confusion_matrix
 
+# Confusion Matrix
 cm = confusion_matrix(y_test, lr_predictions)
 
 print("\nConfusion Matrix")
