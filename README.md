@@ -92,3 +92,15 @@ customer-segmentation-churn-prediction/
 * Advanced Feature Engineering
 * Interactive Dashboard
 * Model Deployment
+## Week 2 Progress
+
+- Performed Customer Segmentation using K-Means Clustering
+- Created 3 customer segments:
+  - New Customers
+  - Premium Customers
+  - Regular Customers
+- Analyzed customer behavior based on tenure, monthly charges and total charges
+- Generated customer segment distribution graph
+- Performed churn analysis for each customer segment
+- Generated churn rate graph by segment
+- Exported segmented customer dataset (customer_segments.csv)

@@ -52,3 +52,37 @@ plt.tight_layout()
 plt.savefig("segment_distribution.png")
 
 print("\nGraph saved as segment_distribution.png")
+# Churn analysis by segment
+
+print("\nChurn Rate by Segment")
+
+churn_analysis = pd.crosstab(
+    df['Segment_Name'],
+    df['Churn'],
+    normalize='index'
+) * 100
+
+print(churn_analysis)
+import matplotlib.pyplot as plt
+
+churn_percent = pd.crosstab(
+    df['Segment_Name'],
+    df['Churn'],
+    normalize='index'
+) * 100
+
+churn_percent['Yes'].plot(
+    kind='bar',
+    title='Churn Rate by Customer Segment'
+)
+
+plt.ylabel("Churn Percentage")
+plt.tight_layout()
+plt.savefig("churn_rate_by_segment.png")
+
+print("\nGraph saved as churn_rate_by_segment.png")
+# Save segmented customers
+
+df.to_csv("customer_segments.csv", index=False)
+
+print("\nCustomer segments saved as customer_segments.csv")
