@@ -4,8 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix
 
 # Load dataset
 df = pd.read_csv("data/WA_Fn-UseC_-Telco-Customer-Churn.csv")
@@ -22,8 +21,28 @@ df['Churn'] = df['Churn'].map({'No': 0, 'Yes': 1})
 # ==========================
 
 df['Partner'] = df['Partner'].map({'No': 0, 'Yes': 1})
+
 df['Dependents'] = df['Dependents'].map({'No': 0, 'Yes': 1})
+
 df['PaperlessBilling'] = df['PaperlessBilling'].map({'No': 0, 'Yes': 1})
+
+df['OnlineSecurity'] = df['OnlineSecurity'].map({
+    'No': 0,
+    'Yes': 1,
+    'No internet service': 0
+})
+
+df['TechSupport'] = df['TechSupport'].map({
+    'No': 0,
+    'Yes': 1,
+    'No internet service': 0
+})
+
+df['Contract'] = df['Contract'].map({
+    'Month-to-month': 0,
+    'One year': 1,
+    'Two year': 2
+})
 
 # Features
 X = df[
@@ -33,7 +52,10 @@ X = df[
         'TotalCharges',
         'Partner',
         'Dependents',
-        'PaperlessBilling'
+        'PaperlessBilling',
+        'OnlineSecurity',
+        'TechSupport',
+        'Contract'
     ]
 ]
 
