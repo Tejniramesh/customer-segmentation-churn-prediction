@@ -2,105 +2,103 @@
 
 ## Project Overview
 
-This project focuses on analyzing customer behavior, segmenting customers into meaningful groups, and predicting customer churn using Machine Learning techniques.
+This project focuses on analyzing customer behavior, performing customer segmentation, and predicting customer churn using Machine Learning techniques.
 
 ## Dataset
 
 **Dataset:** Telco Customer Churn Dataset
 
-* Total Records: 7043
-* Total Features: 21
-* Source: Kaggle
+- Records: 7043
+- Features: 21
+- Source: Kaggle
+
+## Work Completed
+
+### Week 1
+- Data Collection
+- Data Cleaning
+- Exploratory Data Analysis (EDA)
+- Churn Distribution Analysis
+- Logistic Regression
+- Decision Tree
+- Random Forest
+- Model Comparison
+
+### Week 2
+- Customer Segmentation using K-Means
+- Elbow Method Analysis
+- Segment Distribution Analysis
+- Churn Analysis by Segment
+- Feature Engineering
+- ROC Curve Analysis
+- Feature Importance Analysis
+- Cross Validation
+
+## Machine Learning Models
+
+### Logistic Regression
+- Accuracy: 78.46%
+
+### Decision Tree
+- Accuracy: 72.57%
+
+### Random Forest
+- Accuracy: 77.68%
+
+### Optimized Random Forest
+- Accuracy: 79.67%
+
+### Cross Validation
+- Average Accuracy: 80.29%
+
+## Evaluation Metrics
+
+- Accuracy
+- Confusion Matrix
+- Precision
+- Recall
+- F1 Score
+- ROC-AUC Score (80.78%)
+
+## Key Insights
+
+Top Features Affecting Churn:
+
+1. MonthlyCharges
+2. TotalCharges
+3. Tenure
+4. Contract
+
+Customer Segments Identified:
+
+- New Customers
+- Premium Customers
+- Regular Customers
 
 ## Technologies Used
 
-* Python
-* Pandas
-* Scikit-Learn
-* Git
-* GitHub
-* VS Code
+- Python
+- Pandas
+- Scikit-Learn
+- Matplotlib
+- Git
+- GitHub
+- VS Code
 
-## Week 1 Tasks Completed
+## Generated Outputs
 
-### 1. Exploratory Data Analysis (EDA)
+- customer_segments.csv
+- segment_distribution.png
+- churn_rate_by_segment.png
+- elbow_curve.png
+- roc_curve.png
+- feature_importance.png
 
-* Loaded and explored the dataset
-* Checked data types and dataset structure
-* Analyzed dataset dimensions
-* Examined churn distribution
+## Project Status
 
-### 2. Data Cleaning
-
-* Converted TotalCharges to numeric format
-* Removed missing values
-* Prepared data for Machine Learning
-
-### 3. Customer Segmentation using K-Means
-
-* Selected key features:
-
-  * Tenure
-  * MonthlyCharges
-  * TotalCharges
-* Scaled features using StandardScaler
-* Applied K-Means Clustering (3 segments)
-* Segmented customers into different groups
-
-### 4. Basic Classification using Logistic Regression
-
-* Converted Churn into binary values
-* Split dataset into training and testing sets
-* Trained Logistic Regression model
-* Evaluated model performance
-
-## Results
-
-### Customer Segmentation
-
-* Segment 0: 2215 customers
-* Segment 1: 3346 customers
-* Segment 2: 1471 customers
-
-### Classification Performance
-
-* Logistic Regression Accuracy: 77.97%
-
-## Project Structure
-
-customer-segmentation-churn-prediction/
-
-├── data/
-
-│ └── WA_Fn-UseC_-Telco-Customer-Churn.csv
-
-├── notebooks/
-
-│ ├── eda.py
-
-│ ├── week1_kmeans.py
-
-│ └── basic_classification.py
-
-└── README.md
-
-## Future Enhancements
-
-* Decision Tree Classification
-* Random Forest Classification
-* Model Comparison
-* Advanced Feature Engineering
-* Interactive Dashboard
-* Model Deployment
-## Week 2 Progress
-
-- Performed Customer Segmentation using K-Means Clustering
-- Created 3 customer segments:
-  - New Customers
-  - Premium Customers
-  - Regular Customers
-- Analyzed customer behavior based on tenure, monthly charges and total charges
-- Generated customer segment distribution graph
-- Performed churn analysis for each customer segment
-- Generated churn rate graph by segment
-- Exported segmented customer dataset (customer_segments.csv)
+Completed:
+- Customer Segmentation Analysis
+- Feature Engineering
+- Churn Prediction Modeling
+- Model Evaluation
+- Model Optimization
