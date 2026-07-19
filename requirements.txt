@@ -1,0 +1,14 @@
+streamlit
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+tensorflow
+keras
+torch
+transformers
+sentence-transformers
+faiss-cpu
+huggingface-hub
+openpyxl
