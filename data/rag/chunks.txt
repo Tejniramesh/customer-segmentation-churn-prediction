@@ -1,0 +1,24 @@
+CHUNK 1
+CUSTOMER SEGMENTATION Customer segmentation divides customers into groups based on purchasing behavior, spending patterns and tenure. Premium Customers: Customers with high spending and long-term engagement. Regular Customers: Customers with moderate spending and frequent purchases. Occasional Customers: Customers who purchase only during offers or seasonal periods. Business Recommendation: Premium customers should receive loyalty rewards and exclusive benefits.
+
+CHUNK 2
+Regular customers should receive personalized product recommendations. Occasional customers should receive promotional discounts. ------------------------------------------------------------ CUSTOMER CHURN PREDICTION Customer churn refers to customers who stop purchasing or discontinue services. Important churn indicators: Month-to-month contract Low tenure High monthly charges Lack of technical support
+
+CHUNK 3
+No online security Retention Strategies: Offer annual subscription discounts. Improve customer support quality. Provide loyalty rewards. Personalize offers based on purchase history. ------------------------------------------------------------ PURCHASE PREDICTION (LSTM) Purchase sequence prediction identifies the next likely purchase based on previous buying behavior. Benefits: Increase repeat purchases.
+
+CHUNK 4
+Improve recommendation systems. Optimize inventory management. Business Insight: Customers often purchase related products together. Frequently purchased items should be recommended automatically. ------------------------------------------------------------ CUSTOMER SENTIMENT ANALYSIS Sentiment analysis classifies customer reviews into: Positive Neutral Negative Positive reviews indicate customer satisfaction.
+
+CHUNK 5
+Negative reviews indicate quality issues, delivery problems or poor customer service. Business Recommendation: Monitor negative reviews frequently. Respond quickly to customer complaints. Improve products receiving repeated negative feedback. ------------------------------------------------------------ CUSTOMER RETENTION STRATEGIES Improve after-sales support. Provide personalized discounts. Reward loyal customers.
+
+CHUNK 6
+Offer referral incentives. Reduce customer complaints through faster issue resolution. Collect customer feedback regularly. ------------------------------------------------------------ BUSINESS INSIGHTS Positive customer sentiment generally increases customer retention. Premium customers contribute the highest revenue. Customers with technical support show lower churn probability. Early identification of dissatisfied customers helps prevent churn.
+
+CHUNK 7
+Combining customer segmentation, churn prediction, purchase prediction and sentiment analysis enables intelligent customer relationship management. ------------------------------------------------------------ AI RECOMMENDATIONS Use predictive analytics to identify customers at risk. Offer customized recommendations. Improve customer engagement using personalized communication. Use AI chatbots for customer support.
+
+CHUNK 8
+Continuously analyze customer reviews to improve products and services.
+
