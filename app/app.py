@@ -2,7 +2,8 @@
     import io
     import json
     import pickle
-    from pathlib import Path
+    from pathlib 
+    import Path
     import numpy as np
     import pandas as pd
     import streamlit as st
