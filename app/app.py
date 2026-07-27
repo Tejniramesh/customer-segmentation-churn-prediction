@@ -287,7 +287,7 @@ def info_card(title, text):
 def show_image_if_exists(path, caption):
     resolved = resolve_path(path)
     if resolved.exists():
-        st.image(str(resolved), caption=caption, use_container_width=True)
+        st.image(str(resolved), caption=caption, use_column_width=True)
     else:
         try:
             display_path = os.path.relpath(resolved, BASE_DIR)
