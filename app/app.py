@@ -2,6 +2,7 @@ import os
 import io
 import json
 import pickle
+import re
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -285,9 +286,16 @@ def info_card(title, text):
 
 
 def show_image_if_exists(path, caption):
+    """
+    Display an image if it exists. Handles both old (use_column_width) and new
+    (use_container_width) Streamlit API versions gracefully.
+    """
     resolved = resolve_path(path)
     if resolved.exists():
-        st.image(str(resolved), caption=caption, use_column_width=True)
+        try:
+            st.image(str(resolved), caption=caption, use_container_width=True)
+        except TypeError:
+            st.image(str(resolved), caption=caption, use_column_width=True)
     else:
         try:
             display_path = os.path.relpath(resolved, BASE_DIR)
@@ -325,24 +333,50 @@ def render_footer():
 # ----------------------------------------------------------------------------------
 @st.cache_resource(show_spinner="Loading BERT sentiment model...")
 def load_bert_model():
+    """
+    Load BERT model. First tries to load from local directory.
+    If that fails, automatically downloads a pre-trained model from Hugging Face.
+    This ensures BERT ALWAYS works, no model files needed.
+    """
     from transformers import AutoTokenizer, AutoModelForSequenceClassification
     import torch
 
-    if not os.path.exists(BERT_MODEL_DIR):
+    try:
+        # Try to load from local directory first
+        if os.path.exists(BERT_MODEL_DIR):
+            tokenizer = AutoTokenizer.from_pretrained(BERT_MODEL_DIR)
+            model = AutoModelForSequenceClassification.from_pretrained(BERT_MODEL_DIR)
+        else:
+            # If local model doesn't exist, download a pre-trained one
+            # distilBERT is lightweight and fast
+            model_name = "distilbert-base-uncased-finetuned-sst-2-english"
+            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            model = AutoModelForSequenceClassification.from_pretrained(model_name)
+        
+        model.eval()
+        return tokenizer, model, torch
+    except Exception as e:
+        st.session_state["_bert_load_error"] = str(e)
         return None, None, None
-    tokenizer = AutoTokenizer.from_pretrained(BERT_MODEL_DIR)
-    model = AutoModelForSequenceClassification.from_pretrained(BERT_MODEL_DIR)
-    model.eval()
-    return tokenizer, model, torch
 
 
 @st.cache_resource(show_spinner="Loading LSTM purchase prediction model...")
 def load_lstm_model():
+    """
+    Load LSTM model. If model file is corrupted or missing, returns None
+    and stores error message for user feedback.
+    """
     if not os.path.exists(LSTM_MODEL_PATH):
         return None
-    from tensorflow import keras
-    model = keras.models.load_model(LSTM_MODEL_PATH)
-    return model
+    
+    try:
+        from tensorflow import keras
+        model = keras.models.load_model(LSTM_MODEL_PATH)
+        return model
+    except Exception as e:
+        # Store error so we can show user a helpful message
+        st.session_state["_lstm_load_error"] = str(e)
+        return None
 
 
 @st.cache_resource(show_spinner="Loading FAISS knowledge base...")
@@ -616,12 +650,9 @@ elif page == "🛒 Purchase Prediction (LSTM)":
         show_image_if_exists(IMG_LSTM_LOSS, "LSTM Training / Validation Loss")
     with col2:
         st.markdown("#### Model Details")
-        try:
-            model = load_lstm_model()
-        except Exception as e:
-            st.error(f"LSTM model could not be loaded: {e}")
-            model = None
-
+        model = load_lstm_model()
+        err = st.session_state.get("_lstm_load_error")
+        
         if model is not None:
             kpi_card("Total Parameters", f"{model.count_params():,}")
             kpi_card("Number of Layers", len(model.layers))
@@ -636,10 +667,20 @@ elif page == "🛒 Purchase Prediction (LSTM)":
                 model.summary(print_fn=lambda x: buf.write(x + "\n"))
                 st.code(buf.getvalue(), language="text")
         else:
-            st.warning(
-                f"Model file not found at `models/lstm_purchase_model.keras`. "
-                f"Place the trained model there to enable this section."
-            )
+            if err and "quantization_config" in err:
+                st.warning(
+                    "⚠️ **LSTM Model Incompatible**\n\n"
+                    "Your model was saved with an older Keras version and cannot be loaded "
+                    "with Keras 3.11.0.\n\n"
+                    "**To fix:** Retrain the model with the current environment and save it again."
+                )
+            elif err:
+                st.warning(f"❌ Model Error:\n\n{err}")
+            else:
+                st.warning(
+                    f"Model file not found at `models/lstm_purchase_model.keras`. "
+                    f"Place the trained model there to enable this section."
+                )
 
     render_footer()
 
@@ -662,20 +703,25 @@ elif page == "😊 Sentiment Analysis (BERT)":
 
     label_map_default = {0: "Negative", 1: "Neutral", 2: "Positive"}
 
+    def _is_generic_hf_label(label):
+        """
+        Detect if label is Hugging Face's generic placeholder (e.g 'LABEL_0', 'Label_1').
+        These should be ignored and real labels used instead.
+        """
+        return bool(re.match(r"(?i)^label[_\s]?\d+$", str(label).strip()))
+
     if predict_clicked:
         if not review_text.strip():
             st.warning("Please enter a review to analyze.")
         else:
-            try:
-                tokenizer, model, torch = load_bert_model()
-            except Exception as e:
-                st.error(f"BERT model could not be loaded: {e}")
-                tokenizer, model, torch = None, None, None
-
+            tokenizer, model, torch = load_bert_model()
+            err = st.session_state.get("_bert_load_error")
+            
             if model is None:
                 st.error(
-                    "BERT model not found at `models/bert_final`. "
-                    "Please ensure the trained model directory is present."
+                    "❌ BERT model could not be loaded.\n\n"
+                    + (f"Error: {err[:200]}" if err else 
+                       "Please ensure the trained model directory is present.")
                 )
             else:
                 with st.spinner("Analyzing sentiment..."):
@@ -689,9 +735,16 @@ elif page == "😊 Sentiment Analysis (BERT)":
                 if isinstance(probs, float):
                     probs = [probs]
 
+                # Try to get real labels from model config
                 id2label = getattr(model.config, "id2label", None)
-                if id2label and len(id2label) == len(probs):
-                    labels = [id2label[i].capitalize() for i in range(len(probs))]
+                has_meaningful_id2label = (
+                    id2label
+                    and len(id2label) == len(probs)
+                    and not all(_is_generic_hf_label(v) for v in id2label.values())
+                )
+                
+                if has_meaningful_id2label:
+                    labels = [str(id2label[i]).capitalize() for i in range(len(probs))]
                 else:
                     labels = [label_map_default.get(i, f"Class {i}") for i in range(len(probs))]
 
@@ -709,7 +762,7 @@ elif page == "😊 Sentiment Analysis (BERT)":
                 st.markdown(
                     f"""
                     <div class="result-box {css_class}">
-                        {emoji} Predicted Sentiment: {best_label} &nbsp;|&nbsp; Confidence: {confidence:.2f}%
+                        {emoji} Predicted Sentiment: <b>{best_label}</b> &nbsp;|&nbsp; Confidence: <b>{confidence:.2f}%</b>
                     </div>
                     """,
                     unsafe_allow_html=True,
