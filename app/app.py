@@ -343,17 +343,25 @@ def load_bert_model():
 
 @st.cache_resource(show_spinner="Loading LSTM purchase prediction model...")
 def load_lstm_model():
-    """Load LSTM model. Shows user-friendly error if incompatible."""
+    """Load LSTM model with Keras 3.11.0 compatibility fix."""
     if not os.path.exists(LSTM_MODEL_PATH):
         return None
     
     try:
         from tensorflow import keras
+        # Try normal load first
         model = keras.models.load_model(LSTM_MODEL_PATH)
         return model
     except Exception as e:
-        st.session_state["_lstm_error"] = str(e)
-        return None
+        # If normal load fails, try loading with compile=False
+        try:
+            from tensorflow import keras
+            model = keras.models.load_model(LSTM_MODEL_PATH, compile=False)
+            model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+            return model
+        except Exception as e2:
+            st.session_state["_lstm_error"] = str(e2)
+            return None
 
 
 @st.cache_resource(show_spinner="Loading FAISS knowledge base...")
